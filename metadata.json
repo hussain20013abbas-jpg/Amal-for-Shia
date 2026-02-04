@@ -1,0 +1,9 @@
+{
+  "name": " Amal for Shia",
+  "description": "A comprehensive Shia Islamic sanctuary providing Quran, Duas, Amaal, and a Daily Prayer Tracker. Dedicated to the legacy of Syed Muhammad Tahir.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera",
+    "microphone"
+  ]
+}
