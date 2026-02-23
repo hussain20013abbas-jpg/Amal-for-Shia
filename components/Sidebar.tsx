@@ -23,10 +23,15 @@ const Sidebar: React.FC<SidebarProps> = ({
   const menuItems = [
     { id: 'home', icon: 'fa-mosque', label: 'Sanctuary' },
     { id: 'quran', icon: 'fa-book-open', label: 'Holy Quran' },
-    { id: 'tasbih', icon: 'fa-fingerprint', label: 'Tasbih' },
+    { id: 'prayer-times', icon: 'fa-clock', label: 'Prayer Times' },
     { id: 'duas', icon: 'fa-hands-holding', label: 'Duas & Ziyarat' },
     { id: 'amals', icon: 'fa-gem', label: 'Sacred Amaal' },
-    { id: 'ask', icon: 'fa-wand-sparkles', label: 'AI Hub' },
+    { id: 'tasbih', icon: 'fa-fingerprint', label: 'Tasbih' },
+    { id: 'reminders', icon: 'fa-bell', label: 'Reminders' },
+    { id: 'calendar', icon: 'fa-calendar-days', label: 'Hijri Calendar' },
+    { id: 'ask', icon: 'fa-wand-sparkles', label: 'AI Guidance' },
+    { id: 'resources', icon: 'fa-earth-asia', label: 'Resources' },
+    { id: 'legacy', icon: 'fa-scroll', label: 'Our Legacy' },
   ];
 
   return (
@@ -36,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           <button
             key={item.id}
             onClick={() => setActiveTab(item.id)}
-            className={`flex flex-col items-center gap-1 transition-all min-w-[60px] ${
+            className={`flex flex-col items-center gap-1 transition-all min-w-[64px] ${
               activeTab === item.id ? 'text-[#d4af37]' : 'text-white/30'
             }`}
           >
@@ -82,10 +87,6 @@ const Sidebar: React.FC<SidebarProps> = ({
         </nav>
 
         <div className="p-8 border-t border-white/5 space-y-4">
-          <button className="w-full flex items-center p-4 rounded-2xl hover:bg-white/5 transition-all text-white/30 hover:text-white group">
-            <i className="fas fa-comment-dots text-lg"></i>
-            {!isCollapsed && <span className="ml-4 text-[8px] font-black uppercase tracking-widest">Feedback</span>}
-          </button>
           <button onClick={onAdminClick} className={`w-full flex items-center p-4 rounded-2xl hover:bg-white/5 transition-all group ${isLocked ? 'text-white/10' : 'text-[#d4af37]'}`}>
             <i className={`fas ${isLocked ? 'fa-lock' : 'fa-unlock'} text-lg`}></i>
             {!isCollapsed && <span className="ml-4 text-[8px] font-black uppercase tracking-widest">Guardian</span>}

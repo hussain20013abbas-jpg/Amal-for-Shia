@@ -1,9 +1,9 @@
 
 {
-  "name": "Syed Muhammad Tahir Hub",
+  "name": "Syed Muhammad Tahir Ibne Syed Muhammad Mehdi Shia Hub",
   "short_name": "SMT Hub",
   "description": "Exquisite Shia Islamic application for Quran, Duas, and Amals dedicated to the legacy of Syed Muhammad Tahir.",
-  "start_url": "/",
+  "start_url": ".",
   "display": "standalone",
   "background_color": "#011a14",
   "theme_color": "#022c22",

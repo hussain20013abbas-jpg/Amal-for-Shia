@@ -1,6 +1,6 @@
 {
-  "name": " Amal for Shia",
-  "description": "A comprehensive Shia Islamic sanctuary providing Quran, Duas, Amaal, and a Daily Prayer Tracker. Dedicated to the legacy of Syed Muhammad Tahir.",
+  "name": "Syed Muhammad Tahir Ibne Syed Muhammad Mehdi Shia Hub",
+  "description": "A luxury Shia Islamic sanctuary providing Quran with audio, Duas, Amaal, and a Prayer Tracker. Dedicated to the legacy of Syed Muhammad Tahir.",
   "requestFramePermissions": [
     "geolocation",
     "camera",

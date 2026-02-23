@@ -9,6 +9,8 @@ export interface Dua {
   transliteration?: string;
   benefits?: string;
   audio?: string;
+  historicalContext?: string;
+  biography?: string;
 }
 
 export interface Surah {
@@ -38,69 +40,13 @@ export interface Amal {
   urduDescription?: string;
 }
 
-export interface MasailCategory {
-  title: string;
-  rulings: {
-    question: string;
-    answer: string;
-  }[];
-}
-
-export interface Scholar {
-  name: string;
-  title: string;
-  keyWisdom: string;
-}
-
-export interface MonthInfo {
-  name: string;
-  significance: string;
-  recommendedAmals: string[];
-  detailedAmals: string[];
-}
-
-export interface SavedAyah {
-  surahNumber: number;
-  surahName: string;
-  ayahNumber: number;
-  ayahText: string;
-  translation: string;
-  note: string;
-  timestamp: number;
-}
-
-export interface PlaylistItem {
-  type: 'dua' | 'ziyarat';
-  id: string;
-}
-
-export interface Playlist {
-  id: string;
-  name: string;
-  items: PlaylistItem[];
-  timestamp: number;
-}
-
-export interface Reminder {
-  id: string;
-  title: string;
-  time: string; // HH:mm format
-  day?: string; // Optional: specific day for weekly Amaal
-  active: boolean;
-}
-
 export interface Reciter {
-  id: string; // API identifier for ayah-by-ayah
+  id: string;
   name: string;
   fullName: string;
-  slug: string; // for full surah downloads
+  slug: string;
   bio?: string;
   country?: string;
-}
-
-export interface NamazLogEntry {
-  date: string; // ISO format YYYY-MM-DD
-  count: number; // 0-5
 }
 
 export interface QadhaState {
@@ -117,4 +63,51 @@ export interface TasbihPreset {
   label: string;
   max: number;
   isCustom?: boolean;
+}
+
+export interface SavedAyah {
+  surahNumber: number;
+  surahName: string;
+  ayahNumber: number;
+  ayahText: string;
+  translation: string;
+  note: string;
+  timestamp: number;
+}
+
+export interface DailyNamazStats {
+  Fajr: boolean;
+  Dhuhr: boolean;
+  Asr: boolean;
+  Maghrib: boolean;
+  Isha: boolean;
+}
+
+export interface PrayerHistory {
+  [date: string]: DailyNamazStats;
+}
+
+export interface Reminder {
+  id: string;
+  prayerName: string;
+  offsetMinutes: number; // e.g., -15 for 15 mins before, 0 for at time, 15 for 15 mins after
+  enabled: boolean;
+  soundUrl?: string;
+  label?: string;
+}
+
+export interface HijriEvent {
+  day: number;
+  month: number;
+  title: string;
+  description: string;
+  type: 'martyrdom' | 'birth' | 'event';
+}
+
+export interface ShiaResource {
+  id: string;
+  name: string;
+  url: string;
+  icon: string;
+  description: string;
 }
