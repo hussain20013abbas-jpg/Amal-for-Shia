@@ -5,12 +5,14 @@ export interface Dua {
   category: string;
   arabic: string;
   translation: string;
+  urduTranslation?: string;
   urduDescription?: string;
   transliteration?: string;
   benefits?: string;
   audio?: string;
   historicalContext?: string;
   biography?: string;
+  tafsir?: string;
 }
 
 export interface Surah {
@@ -28,14 +30,26 @@ export interface Ayah {
   numberInSurah: number;
   audio?: string;
   translation?: string;
+  urduTranslation?: string;
   transliteration?: string;
+}
+
+export interface AmalStep {
+  text: string;
+  reference?: {
+    text: string;
+    arabic?: string;
+    source?: string;
+    audio?: string;
+    translation?: string;
+  };
 }
 
 export interface Amal {
   id: string;
   title: string;
   description: string;
-  steps: string[];
+  steps: (string | AmalStep)[];
   reward?: string;
   urduDescription?: string;
 }
@@ -110,4 +124,84 @@ export interface ShiaResource {
   url: string;
   icon: string;
   description: string;
+}
+
+export interface MediaItem {
+  id: string;
+  type: 'audio' | 'video';
+  title: string;
+  speaker: string;
+  url: string;
+  duration: string;
+  thumbnail?: string;
+  category: string;
+}
+
+export interface QuizQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+}
+
+export interface UserProfile {
+  id: string;
+  name: string;
+  email?: string;
+  avatar: string; // Emoji or URL
+  role: 'user' | 'moderator' | 'admin';
+  joinedDate: string;
+}
+
+export interface ForumReply {
+  id: string;
+  author: string;
+  authorAvatar?: string;
+  content: string;
+  timestamp: string;
+  upvotes: number;
+  downvotes: number;
+}
+
+export interface ForumTopic {
+  id: string;
+  title: string;
+  content: string; // Added content body
+  author: string;
+  authorAvatar?: string;
+  replies: number; // Keep for display count, or derive from repliesList
+  repliesList: ForumReply[]; // Added detailed replies
+  views: number;
+  lastActive: string;
+  category: string;
+  upvotes: number;
+  downvotes: number;
+  isPinned?: boolean;
+}
+
+export interface RamadanDay {
+  day: number;
+  dua: Dua;
+  amaal: string[];
+}
+
+export interface Hadith {
+  id: string;
+  arabic: string;
+  translation: string;
+  source: string;
+  author: string;
+  tags?: string[];
+}
+
+export interface ShiaKnowledge {
+  id: string;
+  title: string;
+  category: 'Theology' | 'Figures' | 'History' | 'Practices';
+  content: string;
+  arabic?: string;
+  translation?: string;
+  image?: string;
+  subsections?: { title: string; content: string }[];
 }

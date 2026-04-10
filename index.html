@@ -14,7 +14,6 @@
     
     <title>Syed Muhammad Tahir Ibne Syed Muhammad Mehdi | Shia Hub</title>
     
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
     
@@ -75,23 +74,32 @@
         .active-ayah-card {
             animation: active-pulse 4s ease-in-out infinite;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-in { animation-duration: 500ms; animation-fill-mode: both; }
+        .fade-in { animation-name: fadeIn; }
+
+        @keyframes slideInFromLeft {
+            from { transform: translateX(-1rem); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        .slide-in-from-left-4 { animation-name: slideInFromLeft; }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .zoom-in { animation-name: zoomIn; }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.3/",
-    "react": "https://esm.sh/react@^19.2.3",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
-    "@google/genai": "https://esm.sh/@google/genai@^1.37.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
 </head>
 <body class="min-h-screen">
     <div id="root"></div>
     <script>
       // Fix for SW origin issues: Use relative path explicitly
+      /*
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js', { scope: './' }).then(registration => {
@@ -101,7 +109,8 @@
           });
         });
       }
+      */
     </script>
-<script type="module" src="/index.tsx"></script>
+<script type="module" src="/src/index.tsx"></script>
 </body>
 </html>
