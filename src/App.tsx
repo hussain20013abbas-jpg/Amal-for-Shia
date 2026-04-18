@@ -5,8 +5,8 @@ import Sidebar from './components/Sidebar';
 import AdminPortal from './components/AdminPortal';
 import AudioController from './components/AudioController';
 import PrayerTracker from './components/PrayerTracker';
-import QiblaFinder from './components/QiblaFinder';
-import SacredCollection from './components/SacredCollection';
+import { QiblaCompass } from './components/QiblaCompass';
+import { HadithLibrary } from './components/HadithLibrary';
 import VoiceGuidance from './components/VoiceGuidance';
 import SalatGuide from './components/SalatGuide';
 import { 
@@ -29,7 +29,8 @@ import {
   SEHRI_DUA,
   SHIA_HADITHS,
   SHIA_KNOWLEDGE_BASE,
-  DUA_CATEGORIES
+  DUA_CATEGORIES,
+  HADITH_CATEGORIES
 } from './constants';
 import { Surah, Ayah, Dua, Reciter, QadhaState, TasbihPreset, Amal, PrayerHistory, DailyNamazStats, Reminder, HijriEvent, SavedAyah, MediaItem, QuizQuestion, ForumTopic, RamadanDay, UserProfile, ForumReply, Hadith, ShiaKnowledge } from './types';
 import { askGeminiChat, AiConsultationOptions } from './services/geminiService';
@@ -159,6 +160,9 @@ const App: React.FC = () => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [surahs, setSurahs] = useState<Surah[]>([]);
   const [surahSearch, setSurahSearch] = useState('');
+  const [quranGlobalSearch, setQuranGlobalSearch] = useState('');
+  const [quranSearchResults, setQuranSearchResults] = useState<any[]>([]);
+  const [isSearchingQuran, setIsSearchingQuran] = useState(false);
   const [selectedSurah, setSelectedSurah] = useState<Surah | null>(null);
   const [selectedReciter, setSelectedReciter] = useState<Reciter>(RECITERS[0]);
   const [reciterSearch, setReciterSearch] = useState('');
@@ -192,6 +196,54 @@ const App: React.FC = () => {
   });
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [savedHadiths, setSavedHadiths] = useState<string[]>(() => {
+    const saved = localStorage.getItem('smt_saved_hadiths');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [hadithSearch, setHadithSearch] = useState('');
+  const [hadithCategory, setHadithCategory] = useState('All');
+  const [qiblaDirection, setQiblaDirection] = useState<number | null>(null);
+  const [deviceHeading, setDeviceHeading] = useState<number | null>(null);
+
+  useEffect(() => {
+    localStorage.setItem('smt_saved_hadiths', JSON.stringify(savedHadiths));
+  }, [savedHadiths]);
+
+  const toggleSavedHadith = (id: string) => {
+    setSavedHadiths(prev => prev.includes(id) ? prev.filter(hid => hid !== id) : [...prev, id]);
+  };
+
+  const calculateQibla = (lat: number, lng: number) => {
+    const KAABA_LAT = 21.4225 * (Math.PI / 180);
+    const KAABA_LNG = 39.8262 * (Math.PI / 180);
+    const phi = lat * (Math.PI / 180);
+    const lambda = lng * (Math.PI / 180);
+
+    const y = Math.sin(KAABA_LNG - lambda);
+    const x = Math.cos(phi) * Math.tan(KAABA_LAT) - Math.sin(phi) * Math.cos(KAABA_LNG - lambda);
+    let qibla = Math.atan2(y, x) * (180 / Math.PI);
+    qibla = (qibla + 360) % 360;
+    setQiblaDirection(qibla);
+  };
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((pos) => {
+        calculateQibla(pos.coords.latitude, pos.coords.longitude);
+      });
+    }
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      // @ts-ignore
+      const heading = e.webkitCompassHeading || e.alpha;
+      if (heading !== undefined && heading !== null) setDeviceHeading(heading);
+    };
+
+    if (typeof window !== 'undefined' && 'ondeviceorientation' in window) {
+      window.addEventListener('deviceorientation', handleOrientation);
+    }
+    return () => window.removeEventListener('deviceorientation', handleOrientation);
+  }, []);
 
   const [tasbihCount, setTasbihCount] = useState(() => {
     const saved = localStorage.getItem('smt_tasbih_count');
@@ -299,6 +351,25 @@ const App: React.FC = () => {
     }
     ayahRefs.current[ayahNum]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setJumpToAyah('');
+  };
+
+  const handleQuranGlobalSearch = async () => {
+    if (!quranGlobalSearch.trim()) return;
+    setIsSearchingQuran(true);
+    try {
+      const response = await fetch(`https://api.alquran.cloud/v1/search/${quranGlobalSearch}/all/ur.jawadi`);
+      const data = await response.json();
+      if (data.status === 'OK') {
+        setQuranSearchResults(data.data.matches);
+      } else {
+        setQuranSearchResults([]);
+      }
+    } catch (e) {
+      console.error(e);
+      setQuranSearchResults([]);
+    } finally {
+      setIsSearchingQuran(false);
+    }
   };
   const [newTasbihName, setNewTasbihName] = useState('');
   const [newTasbihLabel, setNewTasbihLabel] = useState('');
@@ -1305,40 +1376,138 @@ Please explain its significance, key themes, and lessons based on Shia Tafsir (e
                  <header className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10">
                     <div>
                       <h2 className="text-6xl font-black luxury-text uppercase tracking-tighter">Holy Quran</h2>
-                      <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.5em] mt-2">Divine Verses of Guidance</p>
+                       <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.5em] mt-2">Divine Verses of Guidance</p>
+                     </div>
+                     <div className="flex flex-col md:flex-row items-center gap-6 w-full lg:w-auto">
+                        <button 
+                          onClick={() => setIsFullScreen(!isFullScreen)}
+                          className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all border ${isFullScreen ? 'bg-[#d4af37] text-[#011a14] border-[#d4af37]' : 'bg-white/5 border-white/10 text-white/40 hover:text-[#d4af37]'}`}
+                          title={isFullScreen ? "Exit Full Screen" : "Full Screen Mode"}
+                        >
+                          <i className={`fas ${isFullScreen ? 'fa-compress' : 'fa-expand'}`}></i>
+                        </button>
+                        <button 
+                          onClick={() => setIsReciterModalOpen(true)}
+                          className="flex items-center gap-4 bg-white/5 border-2 border-white/10 rounded-[2rem] px-8 py-4 hover:border-[#d4af37]/40 transition-all group"
+                        >
+                           <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 text-[#d4af37] flex items-center justify-center group-hover:bg-[#d4af37] group-hover:text-[#011a14] transition-all">
+                              <i className="fas fa-microphone"></i>
+                           </div>
+                           <div className="text-left">
+                              <span className="text-[8px] font-black text-white/20 uppercase tracking-widest block">Selected Reciter</span>
+                              <span className="text-[11px] font-black uppercase tracking-widest text-white group-hover:text-[#d4af37] transition-colors">{selectedReciter.name}</span>
+                           </div>
+                        </button>
+                        <div className="relative w-full lg:w-[25rem] group">
+                           <i className="fas fa-search absolute left-8 top-1/2 -translate-y-1/2 text-[#d4af37]/40 text-2xl group-focus-within:text-[#d4af37] transition-colors"></i>
+                           <input 
+                            type="text" 
+                            placeholder="Seek a Surah..." 
+                            value={surahSearch} 
+                            onChange={(e) => setSurahSearch(e.target.value)} 
+                            className="w-full bg-white/5 border-2 border-white/10 rounded-[3rem] py-6 pl-20 pr-10 text-lg font-black uppercase outline-none focus:border-[#d4af37]/50 shadow-2xl transition-all" 
+                           />
+                        </div>
+                        <div className="relative w-full lg:w-[25rem] group">
+                           <i className="fas fa-globe absolute left-8 top-1/2 -translate-y-1/2 text-[#d4af37]/40 text-2xl group-focus-within:text-[#d4af37] transition-colors"></i>
+                           <input 
+                            type="text" 
+                            placeholder="Global Verse Search..." 
+                            value={quranGlobalSearch} 
+                            onChange={(e) => setQuranGlobalSearch(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleQuranGlobalSearch()}
+                            className="w-full bg-white/5 border-2 border-white/10 rounded-[3rem] py-6 pl-20 pr-10 text-lg font-black uppercase outline-none focus:border-[#d4af37]/50 shadow-2xl transition-all" 
+                           />
+                           <button 
+                             onClick={handleQuranGlobalSearch}
+                             className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-[#d4af37]/10 text-[#d4af37] flex items-center justify-center hover:bg-[#d4af37] hover:text-[#011a14] transition-all"
+                           >
+                             <i className="fas fa-arrow-right"></i>
+                           </button>
+                        </div>
+                     </div>
+                  </header>
+
+                  {isSearchingQuran && (
+                    <div className="flex flex-col items-center justify-center py-20 animate-pulse">
+                      <div className="w-20 h-20 border-4 border-[#d4af37]/20 border-t-[#d4af37] rounded-full animate-spin mb-6 shadow-[0_0_50px_rgba(212,175,55,0.2)]"></div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.5em] text-[#d4af37]">Traversing the Divine Verses...</p>
                     </div>
-                    <div className="flex flex-col md:flex-row items-center gap-6 w-full lg:w-auto">
-                       <button 
-                         onClick={() => setIsFullScreen(!isFullScreen)}
-                         className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center transition-all border ${isFullScreen ? 'bg-[#d4af37] text-[#011a14] border-[#d4af37]' : 'bg-white/5 border-white/10 text-white/40 hover:text-[#d4af37]'}`}
-                         title={isFullScreen ? "Exit Full Screen" : "Full Screen Mode"}
-                       >
-                         <i className={`fas ${isFullScreen ? 'fa-compress' : 'fa-expand'}`}></i>
-                       </button>
-                       <button 
-                         onClick={() => setIsReciterModalOpen(true)}
-                         className="flex items-center gap-4 bg-white/5 border-2 border-white/10 rounded-[2rem] px-8 py-4 hover:border-[#d4af37]/40 transition-all group"
-                       >
-                          <div className="w-10 h-10 rounded-full bg-[#d4af37]/10 text-[#d4af37] flex items-center justify-center group-hover:bg-[#d4af37] group-hover:text-[#011a14] transition-all">
-                             <i className="fas fa-microphone"></i>
+                  )}
+
+                  {quranSearchResults.length > 0 && !isSearchingQuran && (
+                    <div className="space-y-10 animate-in fade-in slide-in-from-top-6 duration-700">
+                      <div className="flex justify-between items-center border-b border-white/5 pb-8">
+                         <div className="flex items-center gap-6">
+                            <div className="w-14 h-14 rounded-2xl bg-[#d4af37]/10 text-[#d4af37] flex items-center justify-center shadow-lg border border-[#d4af37]/20">
+                               <i className="fas fa-book-open text-xl"></i>
+                            </div>
+                            <div>
+                               <h3 className="text-3xl font-black uppercase tracking-widest luxury-text">Search Library</h3>
+                               <p className="text-[9px] font-black text-white/20 uppercase tracking-[0.4em] mt-1">{quranSearchResults.length} verses found matching your quest</p>
+                            </div>
+                         </div>
+                        <button 
+                          onClick={() => setQuranSearchResults([])}
+                          className="px-8 py-4 rounded-xl border border-white/10 text-[10px] font-black uppercase tracking-[0.3em] text-white/40 hover:text-[#d4af37] hover:border-[#d4af37]/40 transition-all bg-white/5"
+                        >Clear Results</button>
+                      </div>
+                      
+                      <div className="grid grid-cols-1 gap-8">
+                        {quranSearchResults.map((result, idx) => (
+                          <div 
+                            key={idx}
+                            className="glass-card p-10 md:p-14 rounded-[4rem] border-2 border-white/5 hover:border-[#d4af37]/30 transition-all group scale-box hover:shadow-[0_50px_100px_rgba(0,0,0,0.6)] relative overflow-hidden"
+                          >
+                            <div className="absolute top-0 left-0 w-2 h-full bg-[#d4af37]/0 group-hover:bg-[#d4af37] transition-all"></div>
+                            <div className="flex flex-col md:flex-row justify-between items-start gap-12">
+                              <div className="flex-1 space-y-10">
+                                <div className="flex items-center gap-6">
+                                  <div className="flex flex-col items-center justify-center">
+                                    <span className="w-16 h-16 rounded-2xl bg-[#d4af37]/10 text-[#d4af37] flex items-center justify-center font-black text-sm border border-[#d4af37]/20 shadow-lg group-hover:bg-[#d4af37] group-hover:text-[#011a14] transition-all duration-500">
+                                      {result.surah?.number}:{result.numberInSurah}
+                                    </span>
+                                  </div>
+                                  <div>
+                                    <h4 className="text-2xl font-black uppercase tracking-tighter text-white/60 group-hover:text-white transition-colors duration-500">
+                                      {result.surah?.englishName} 
+                                      <span className="text-[11px] font-black text-[#d4af37] ml-4 opacity-40 group-hover:opacity-100 uppercase tracking-widest transition-all">({result.surah?.name})</span>
+                                    </h4>
+                                    <p className="text-[10px] font-black text-white/10 uppercase tracking-[0.4em] mt-1 italic">{result.surah?.englishNameTranslation}</p>
+                                  </div>
+                                </div>
+                                <p className="quran-text text-5xl md:text-6xl text-right leading-[2] luxury-text-glow group-hover:scale-[1.02] transition-transform duration-700">
+                                  {result.text}
+                                </p>
+                                <p className="text-xl md:text-2xl text-white/70 font-serif italic border-l-4 border-[#d4af37]/20 pl-8 leading-relaxed py-2 group-hover:text-white transition-colors duration-500">
+                                  {result.translation}
+                                </p>
+                              </div>
+                              <button 
+                                onClick={() => {
+                                  if (result.surah) {
+                                    const s = surahs.find(surah => surah.number === result.surah.number);
+                                    if (s) {
+                                      handleSurahSelection(s);
+                                      setJumpToAyah(result.numberInSurah.toString());
+                                      setTimeout(() => {
+                                        const el = document.getElementById(`ayah-${result.numberInSurah}`);
+                                        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                        else handleJumpToAyah();
+                                      }, 1500);
+                                    }
+                                  }
+                                }}
+                                className="w-full md:w-auto px-12 py-6 rounded-[2rem] bg-[#d4af37] text-[#011a14] text-[11px] font-black uppercase tracking-[0.3em] hover:scale-110 transition-all shadow-[0_30px_60px_rgba(212,175,55,0.3)] active:scale-95"
+                              >
+                                Go to Verse
+                              </button>
+                            </div>
                           </div>
-                          <div className="text-left">
-                             <span className="text-[8px] font-black text-white/20 uppercase tracking-widest block">Selected Reciter</span>
-                             <span className="text-[11px] font-black uppercase tracking-widest text-white group-hover:text-[#d4af37] transition-colors">{selectedReciter.name}</span>
-                          </div>
-                       </button>
-                       <div className="relative w-full lg:w-[30rem] group">
-                          <i className="fas fa-search absolute left-8 top-1/2 -translate-y-1/2 text-[#d4af37]/40 text-2xl group-focus-within:text-[#d4af37] transition-colors"></i>
-                          <input 
-                           type="text" 
-                           placeholder="Seek a Surah..." 
-                           value={surahSearch} 
-                           onChange={(e) => setSurahSearch(e.target.value)} 
-                           className="w-full bg-white/5 border-2 border-white/10 rounded-[3rem] py-6 pl-20 pr-10 text-lg font-black uppercase outline-none focus:border-[#d4af37]/50 shadow-2xl transition-all" 
-                          />
-                       </div>
+                        ))}
+                      </div>
                     </div>
-                 </header>
+                  )}
 
                  {/* Featured Surah Yaseen */}
                  {!surahSearch && (
@@ -2165,11 +2334,19 @@ Please explain its significance, key themes, and lessons based on Shia Tafsir (e
         )}
 
         {activeTab === 'qibla' && (
-          <QiblaFinder />
+          <div className="py-20 text-center animate-in fade-in">
+            <i className="fas fa-compass text-6xl text-[#d4af37] mb-8 animate-pulse"></i>
+            <h2 className="text-3xl font-black luxury-text mb-4 uppercase">Qibla Direction</h2>
+            <p className="text-white/40 font-black uppercase tracking-widest">Integrating Precision Alignment...</p>
+          </div>
         )}
 
         {activeTab === 'sacred-collection' && (
-          <SacredCollection />
+          <div className="py-20 text-center animate-in fade-in">
+            <i className="fas fa-book-journal-whills text-6xl text-[#d4af37] mb-8 animate-bounce"></i>
+            <h2 className="text-3xl font-black luxury-text mb-4 uppercase">Hadith Treasury</h2>
+            <p className="text-white/40 font-black uppercase tracking-widest">Unveiling Curated Traditions...</p>
+          </div>
         )}
 
         {activeTab === 'voice-guidance' && (
@@ -2185,6 +2362,9 @@ Please explain its significance, key themes, and lessons based on Shia Tafsir (e
               <header className="text-center mb-16">
                  <h2 className="text-6xl font-black luxury-text uppercase mb-4 tracking-tighter">Prayer Times</h2>
                  <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.6em]">Jafari (Shia) Calculation Method</p>
+                 <div className="mt-8 flex justify-center">
+                    <QiblaCompass deviceHeading={deviceHeading} qiblaDirection={qiblaDirection} />
+                 </div>
               </header>
 
               {nextPrayer && (
@@ -2567,8 +2747,16 @@ Please explain its significance, key themes, and lessons based on Shia Tafsir (e
                                 <h3 className="text-3xl font-black uppercase tracking-tight mb-8 leading-tight group-hover:luxury-text transition-all">{dua.title}</h3>
                                 <p className="text-white/40 text-base md:text-lg font-medium italic line-clamp-4 mb-12 flex-1 leading-relaxed">"{dua.translation}"</p>
                                 <div className="mt-auto flex justify-between items-center w-full relative z-10">
-                                   <div className="w-16 h-16 rounded-[1.5rem] bg-[#d4af37]/10 text-[#d4af37] flex items-center justify-center group-hover:bg-[#d4af37] group-hover:text-[#011a14] transition-all shadow-xl group-hover:scale-110">
-                                     <i className="fas fa-play text-xl pl-1"></i>
+                                   <div className="flex gap-3 items-center">
+                                      <div className="w-16 h-16 rounded-[1.5rem] bg-[#d4af37]/10 text-[#d4af37] flex items-center justify-center group-hover:bg-[#d4af37] group-hover:text-[#011a14] transition-all shadow-xl group-hover:scale-110">
+                                        <i className="fas fa-play text-xl pl-1"></i>
+                                      </div>
+                                      <button 
+                                        onClick={(e) => { e.stopPropagation(); toggleSavedDua(dua.id); }}
+                                        className={`w-14 h-14 rounded-xl border flex items-center justify-center transition-all ${savedDuas.includes(dua.id) ? 'bg-[#d4af37]/20 border-[#d4af37] text-[#d4af37]' : 'bg-white/5 border-white/10 text-white/20 hover:text-[#d4af37]'}`}
+                                      >
+                                        <i className={`${savedDuas.includes(dua.id) ? 'fas' : 'far'} fa-bookmark text-sm`}></i>
+                                      </button>
                                    </div>
                                    <div className="flex gap-4">
                                      <div className="text-[10px] font-black text-white/20 uppercase tracking-widest group-hover:text-white transition-colors">Listen Supplication</div>
@@ -2586,8 +2774,8 @@ Please explain its significance, key themes, and lessons based on Shia Tafsir (e
          {activeTab === 'hadith' && (
            <div className="space-y-12 animate-in fade-in max-w-4xl mx-auto py-10">
               <header className="text-center mb-16">
-                 <h2 className="text-6xl font-black luxury-text uppercase mb-4 tracking-tighter">Daily Hadith</h2>
-                 <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.6em]">Wisdom from the Ahlulbayt (as)</p>
+                 <h2 className="text-6xl font-black luxury-text uppercase mb-4 tracking-tighter">Hadith Library</h2>
+                 <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.6em]">Sacred Traditions of the Ahlulbayt (as)</p>
               </header>
 
               <div className="glass-card p-12 md:p-20 rounded-[4rem] border-2 border-[#d4af37]/20 relative overflow-hidden shadow-2xl">
@@ -2789,16 +2977,63 @@ Please explain its significance, key themes, and lessons based on Shia Tafsir (e
                 </div>
               </section>
 
-              <section className="glass-card p-12 rounded-[4rem] border-2 border-white/5">
+               <section className="glass-card p-12 rounded-[4rem] border-2 border-white/5">
                 <div className="flex items-center gap-6 mb-12">
                   <div className="w-16 h-16 rounded-2xl bg-[#d4af37]/10 text-[#d4af37] flex items-center justify-center border border-[#d4af37]/20">
-                    <i className="fas fa-user-shield text-2xl"></i>
+                    <i className="fas fa-flask text-2xl"></i>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-black luxury-text uppercase tracking-tight">Guardian Access</h3>
-                    <p className="text-[10px] font-black text-white/20 uppercase tracking-widest mt-1">Manage administrative privileges</p>
+                    <h3 className="text-2xl font-black luxury-text uppercase tracking-tight">Environmental Variables</h3>
+                    <p className="text-[10px] font-black text-white/20 uppercase tracking-widest mt-1">Configure and host your own spiritual hub</p>
                   </div>
                 </div>
+                
+                <div className="space-y-8">
+                  <div className="p-8 rounded-[2rem] bg-indigo-500/5 border border-indigo-500/20">
+                     <h4 className="text-[11px] font-black text-indigo-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+                        <i className="fas fa-info-circle"></i> Developer Note
+                     </h4>
+                     <p className="text-xs text-white/40 leading-relaxed italic">
+                        "To host this app on your own domain, ensure you have set the `GEMINI_API_KEY` in your environment. This key powers the AI Scholar features. You can also override other settings via the repository's `.env` file."
+                     </p>
+                  </div>
+
+                  <div className="space-y-4">
+                     <div className="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/5">
+                        <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">GEMINI_API_KEY</span>
+                        <span className="text-[9px] px-3 py-1 bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-full font-black uppercase">Active & Secured</span>
+                     </div>
+                     <div className="flex items-center justify-between p-6 bg-white/5 rounded-2xl border border-white/5">
+                        <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">PUBLIC_URL</span>
+                        <span className="text-[9px] text-white/20 font-mono tracking-tighter truncate max-w-[200px]">{window.location.origin}</span>
+                     </div>
+                  </div>
+
+                  <div className="pt-6">
+                     <button 
+                        onClick={() => {
+                           const exportData = {
+                              profile: userProfile,
+                              savedDuas,
+                              savedHadiths,
+                              customTasbihs
+                           };
+                           const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                           const url = URL.createObjectURL(blob);
+                           const a = document.createElement('a');
+                           a.href = url;
+                           a.download = 'shia-hub-export.json';
+                           a.click();
+                        }}
+                        className="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-[#d4af37] hover:bg-[#d4af37]/10 transition-all"
+                     >
+                        <i className="fas fa-download mr-2"></i> Export My Data for New Hosting
+                     </button>
+                  </div>
+                </div>
+              </section>
+
+              <section className="glass-card p-12 rounded-[4rem] border-2 border-white/5">
                 <div className="flex flex-col md:flex-row gap-6">
                   <button 
                     onClick={() => setIsAdminPortalOpen(true)}

@@ -6,6 +6,7 @@ export interface Dua {
   arabic: string;
   translation: string;
   urduTranslation?: string;
+  urduTransliteration?: string;
   urduDescription?: string;
   transliteration?: string;
   benefits?: string;
@@ -31,6 +32,7 @@ export interface Ayah {
   audio?: string;
   translation?: string;
   urduTranslation?: string;
+  urduTransliteration?: string;
   transliteration?: string;
 }
 
@@ -193,6 +195,7 @@ export interface Hadith {
   source: string;
   author: string;
   tags?: string[];
+  category?: string;
 }
 
 export interface ShiaKnowledge {

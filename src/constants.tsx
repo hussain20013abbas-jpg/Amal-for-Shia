@@ -78,6 +78,7 @@ export const ZIYARATS: Dua[] = [
     translation: 'Peace be upon you, O Abu Abdillah, peace be upon you, O son of the Messenger of Allah, peace be upon you, O son of the Commander of the Faithful and the son of the master of the successors...',
     transliteration: 'As-salaamu alaika yaa Abaa Abdillah, As-salaamu alaika yabna Rasoolillah, As-salaamu alaika yabna Ameeril Mo\'mineen...',
     urduTranslation: 'سلام ہو آپ پر اے ابا عبداللہ، سلام ہو آپ پر اے رسول خدا کے فرزند، سلام ہو آپ پر اے امیر المومنین اور سید الوصیین کے فرزند...',
+    urduTransliteration: 'As-salaamu alaika yaa Abaa Abdillah, As-salaamu alaika yabna Rasoolillah, As-salaamu alaika yabna Ameeril Mo\'mineen...',
     audio: 'https://www.duas.org/audio/Ziarat_Ashura.mp3',
     historicalContext: 'A salutation to the Master of Martyrs, Imam Hussain (as), typically recited on the 10th of Muharram and frequently thereafter to renew the pledge of allegiance.',
     biography: 'Imam Hussain (as) is the second grandson of Prophet Muhammad (saws) and the third Imam. His sacrifice in Karbala stands as the ultimate victory of truth over falsehood.',
@@ -91,6 +92,7 @@ export const ZIYARATS: Dua[] = [
     translation: 'O my God, the calamity has escalated, the hidden has been revealed, the veil has been lifted, the hope has been cut off, the earth has become narrow...',
     transliteration: 'Ilahi azumal balaa-o wa barihal khafaa-o wa kashafal ghitaa-o wan qata\'ar rajaa-o wa dhaaqatil ardhu wa moni\'atis samaa-o...',
     urduTranslation: 'اے میرے معبود! مصیبت بڑھ گئی ہے، اور پوشیدہ ظاہر ہو گیا ہے، اور پردہ اٹھ گیا ہے، اور امید ٹوٹ گئی ہے...',
+    urduTransliteration: 'Ilahi azumal balaa-o wa barihal khafaa-o wa kashafal ghitaa-o wan qata\'ar rajaa-o...',
     audio: 'https://www.duas.org/audio/Dua_Faraj.mp3',
     historicalContext: 'Recited to seek the expedited reappearance of the 12th Imam during times of hardship and occultation.',
     biography: 'Imam Muhammad al-Mahdi (atfs) is the son of Imam Hasan al-Askari (as). He is currently in the Great Occultation and will return to fill the world with justice.'
@@ -186,6 +188,7 @@ export const POPULAR_DUAS: Dua[] = [
     translation: 'O Allah, I ask You by Your mercy...',
     transliteration: 'Allahumma inni as\'aluka bi-rahmatika...',
     urduTranslation: 'اے اللہ! میں تجھ سے تیری اس رحمت کے واسطے سے سوال کرتا ہوں جو ہر چیز پر محیط ہے...',
+    urduTransliteration: 'Allahumma inni as\'aluka bi-rahmatikal lati wasi\'at kulla shay...',
     audio: 'https://www.duas.org/audio/Dua_Kumayl.mp3',
     historicalContext: 'Taught by Imam Ali (as) to his companion Kumayl ibn Ziyad. It is recommended for every Thursday night.',
     biography: 'Imam Ali (as) is the first Imam, the successor of the Prophet (saws), and the gateway to the city of knowledge.',
@@ -199,6 +202,7 @@ export const POPULAR_DUAS: Dua[] = [
     translation: 'O Allah, Lord of the Great Light...',
     transliteration: 'Allahumma rabba an-nuri al-azim...',
     urduTranslation: 'اے اللہ! اے نور عظیم کے پروردگار...',
+    urduTransliteration: 'Allahumma rabba an-noorul azeem...',
     audio: 'https://www.duas.org/audio/Dua_Ahad.mp3',
     historicalContext: 'Recited for 40 mornings to be counted among the helpers of the Imam of our Time.',
   },
@@ -671,20 +675,102 @@ export const SHIA_KNOWLEDGE_BASE: ShiaKnowledge[] = [
     category: 'Figures',
     content: 'The Prophet Muhammad (saws), his daughter Lady Fatima (sa), and the Twelve Imams (as) who are divinely protected from sin and error.',
     subsections: [
-      { title: 'Prophet Muhammad (saws)', content: 'The final messenger of Allah and the seal of the prophets.' },
-      { title: 'Lady Fatima az-Zahra (sa)', content: 'The daughter of the Prophet and the leader of the women of paradise.' },
-      { title: 'Imam Ali ibn Abi Talib (as)', content: 'The first Imam and the Commander of the Faithful.' },
-      { title: 'Imam Hasan ibn Ali (as)', content: 'The second Imam, known for his patience and peace treaty.' },
-      { title: 'Imam Hussain ibn Ali (as)', content: 'The third Imam and the Master of Martyrs.' },
-      { title: 'Imam Ali ibn al-Hussain (as)', content: 'The fourth Imam, known as Zayn al-Abidin (Ornament of Worshippers).' },
-      { title: 'Imam Muhammad ibn Ali (as)', content: 'The fifth Imam, known as al-Baqir (Splitter of Knowledge).' },
-      { title: 'Imam Ja\'far ibn Muhammad (as)', content: 'The sixth Imam, known as as-Sadiq (The Truthful) and the founder of the Ja\'fari school of law.' },
-      { title: 'Imam Musa ibn Ja\'far (as)', content: 'The seventh Imam, known as al-Kadhim (The Restrainer of Anger).' },
-      { title: 'Imam Ali ibn Musa (as)', content: 'The eighth Imam, known as ar-Reza (The Pleased One).' },
-      { title: 'Imam Muhammad ibn Ali (as)', content: 'The ninth Imam, known as al-Jawad (The Generous).' },
-      { title: 'Imam Ali ibn Muhammad (as)', content: 'The tenth Imam, known as al-Hadi (The Guide).' },
-      { title: 'Imam Hasan ibn Ali (as)', content: 'The eleventh Imam, known as al-Askari.' },
-      { title: 'Imam Muhammad ibn al-Hasan (atfs)', content: 'The twelfth Imam, the Mahdi, who is currently in occultation and will reappear to establish justice.' }
+      { 
+        title: 'Prophet Muhammad (saws)', 
+        content: 'The final messenger of Allah and the seal of the prophets. Born in Makkah in 570 AD, he received the first revelation at age 40. His life is the ultimate model of morality and justice. He established the foundation of Islam and designated his successor at Ghadir Khumm.' 
+      },
+      { 
+        title: 'Lady Fatima az-Zahra (sa)', 
+        content: 'The daughter of the Prophet and the leader of the women of paradise. She is the link between prophethood and imamate. Her sermons, especially the Fadak sermon, are masterpieces of eloquence and defense of truth.' 
+      },
+      { 
+        title: 'Imam Ali ibn Abi Talib (as)', 
+        content: 'The first Imam and the Commander of the Faithful. Born inside the Kaaba, he was the first to accept Islam. Known for his unmatched bravery, wisdom, and justice. His teachings are preserved in Nahj al-Balagha.' 
+      },
+      { 
+        title: 'Imam Hasan ibn Ali (as)', 
+        content: 'The second Imam, known for his patience and the peace treaty with Muawiya which preserved the blood of Muslims and exposed the true nature of the Umayyad rule.' 
+      },
+      { 
+        title: 'Imam Hussain ibn Ali (as)', 
+        content: 'The third Imam and the Master of Martyrs. His stand in Karbala against the tyrant Yazid saved Islam from distortion. His sacrifice is remembered annually as a symbol of resistance against oppression.' 
+      },
+      { 
+        title: 'Imam Ali ibn al-Hussain (as)', 
+        content: 'The fourth Imam, known as Zayn al-Abidin. He preserved the message of Karbala through prayers and supplications, collected in Sahifa Sajjadiya.' 
+      },
+      { 
+        title: 'Imam Muhammad ibn Ali (as)', 
+        content: 'The fifth Imam, al-Baqir. He established the foundations of Shia jurisprudence and opened the doors of knowledge during a period of political transition.' 
+      },
+      { 
+        title: 'Imam Ja\'far ibn Muhammad (as)', 
+        content: 'The sixth Imam, as-Sadiq. He founded the Ja\'fari school of law and taught thousands of students in various sciences, including Jabir ibn Hayyan.' 
+      },
+      { 
+        title: 'Imam Musa ibn Ja\'far (as)', 
+        content: 'The seventh Imam, al-Kadhim. He spent many years in prison for his resistance against the Abbasid caliphs, known for his extreme patience and restraint of anger.' 
+      },
+      { 
+        title: 'Imam Ali ibn Musa (as)', 
+        content: 'The eighth Imam, ar-Reza. He was forced to move to Khorasan as the heir apparent but used the opportunity to spread the teachings of Ahlulbayt across the eastern Islamic world.' 
+      },
+      { 
+        title: 'Imam Muhammad ibn Ali (as)', 
+        content: 'The ninth Imam, al-Jawad. He became Imam at a young age, demonstrating divine knowledge through debates with the most learned scholars of his time.' 
+      },
+      { 
+        title: 'Imam Ali ibn Muhammad (as)', 
+        content: 'The tenth Imam, al-Hadi. He guided the community during a time of intense surveillance and established the network of representatives (Wikala).' 
+      },
+      { 
+        title: 'Imam Hasan ibn Ali (as)', 
+        content: 'The eleventh Imam, al-Askari. He lived mostly under house arrest in Samarra, preparing the community for the occultation of his son.' 
+      },
+      { 
+        title: 'Imam Muhammad ibn al-Hasan (atfs)', 
+        content: 'The twelfth Imam, the Mahdi. He is the living Hujjah (Proof) of Allah, currently in occultation. He will reappear to establish a global government of justice and peace.' 
+      }
+    ]
+  },
+  {
+    id: 'significant-companions',
+    title: 'Significant Companions',
+    category: 'Figures',
+    content: 'Companions of the Prophet (saws) and the Imams (as) who remained steadfast on the path of truth and the Wilayah of Ahlulbayt.',
+    subsections: [
+      { 
+        title: 'Salman al-Farsi', 
+        content: 'The seeker of truth who traveled from Persia to find the Prophet. The Prophet said of him: "Salman is from us, the Ahlulbayt." He was known for his immense knowledge and piety.' 
+      },
+      { 
+        title: 'Abu Dharr al-Ghifari', 
+        content: 'The truthful companion who never feared the blame of anyone in speaking the truth. He was exiled for his outspoken criticism of the corruption in the Umayyad administration.' 
+      },
+      { 
+        title: 'Miqdad ibn Aswad', 
+        content: 'One of the four pillars of the early Shia community, known for his unwavering loyalty to Imam Ali (as) after the Prophet\'s passing.' 
+      },
+      { 
+        title: 'Ammar ibn Yasir', 
+        content: 'The son of the first martyrs of Islam. The Prophet predicted he would be killed by a "rebellious group." He was martyred in Siffin fighting alongside Imam Ali (as).' 
+      },
+      { 
+        title: 'Malik al-Ashtar', 
+        content: 'The loyal commander of Imam Ali (as)\'s army. Imam Ali said of him: "Malik was to me as I was to the Messenger of Allah."' 
+      },
+      {
+        title: 'Kumayl ibn Ziyad',
+        content: 'A loyal confidant of Imam Ali (as) and a repository of his deeper spiritual secrets. He is famously known for the supplication (Dua Kumayl) taught to him by the Imam. He was martyred for his devotion to the Ahlulbayt.'
+      },
+      {
+        title: 'Jabir ibn Abdullah al-Ansari',
+        content: 'A dedicated companion of the Prophet (saws) who lived long enough to meet Imam al-Baqir (as) and convey the Prophet\'s greetings to him. He was also the first pilgrim to visit Imam Hussain (as) in Karbala after the martyrdom.'
+      },
+      {
+        title: 'Bilal al-Habashi',
+        content: 'The loyal muezzin of the Prophet who refused to recite the Adhan for anyone else after the Prophet\'s passing, except upon the request of Lady Fatima (sa). He remained steadfast in his devotion to the Prophet\'s true successors.'
+      }
     ]
   },
   {
@@ -861,6 +947,38 @@ export const RAMADAN_COMMON_DUAS: Dua[] = [
     translation: 'O Allah, I ask You by Your Name, O Allah, O Beneficent...',
     audio: 'https://www.duas.org/audio/Jawshan_Kabeer.mp3',
     historicalContext: 'Contains 1000 names of Allah, recited especially on the Nights of Qadr (Laylatul Qadr).'
+  },
+  {
+    id: 'tawassul',
+    title: 'Dua Tawassul',
+    category: 'Popular',
+    arabic: 'اَللّهُمَّ اِنّى اَسْئَلُكَ وَاَتَوَجَّهُ اِلَيْكَ بِنَبِيِّكَ نَبِيِّ الرَّحْمَةِ مُحَمَّد صَلَّى اللهُ عَلَيْهِ وَآلِهِ...',
+    translation: 'O Allah, I beseech You and turn my face towards You through Your Prophet, the Prophet of Mercy, Muhammad...',
+    urduTranslation: 'اے اللہ! میں تجھ سے سوال کرتا ہوں اور تیری طرف متوجہ ہوتا ہوں تیرے نبی، نبی رحمت محمد (ص) کے واسطے سے...',
+    urduTransliteration: 'Allahumma inni as\'aluka wa atawajjahu ilaika bi nabiyyina...',
+    audio: 'https://www.duas.org/audio/Dua_Tawassul.mp3',
+    historicalContext: 'The Prayer of Intercession. It is recited to seek the intercession of the 14 Infallibles in the presence of Allah.'
+  },
+  {
+    id: 'mashlool',
+    title: 'Dua Mashlool',
+    category: 'Hardships',
+    arabic: 'اَللّهُمَّ اِنّى اَسْئَلُكَ بِاسْمِكَ بِسْمِ اللهِ الرَّحْمنِ الرَّحيمِ يا ذَا الْجَلالِ وَالْاِكْرامِ...',
+    translation: 'O Allah, I ask You by Your Name, in the Name of Allah, the Beneficent, the Merciful, O Lord of Majesty and Honor...',
+    urduTranslation: 'اے اللہ! میں تجھ سے تیرے نام کے واسطے سے سوال کرتا ہوں، اللہ کے نام سے جو کہ بہت مہربان اور نہایت رحم کرنے والا ہے، اے جلال اور اکرام والے...',
+    urduTransliteration: 'Allahumma inni as\'aluka bismika, bismillahir rahmanir rahim...',
+    audio: 'https://www.duas.org/audio/Dua_Mashlool.mp3',
+    historicalContext: 'Known as "The Supplication of the Youth Struck by Paralysis." Imam Ali (as) taught this to a youth whose father had cursed him, leading to his recovery. It contains the Great Names of Allah.'
+  },
+  {
+    id: 'sahifa-parents',
+    title: 'Dua for Parents',
+    category: 'Sahifa',
+    arabic: 'اللَّهُمَّ صَلِّ عَلَى مُحَمَّد عَبْدِكَ وَرَسُولِكَ، وَأَهْلِ بَيْتِهِ الطَّاهِرِينَ...',
+    translation: 'O Allah, bless Muhammad, Thy slave and Thy messenger, and his household, the pure...',
+    urduTranslation: 'اے اللہ! محمد (ص) پر رحمت نازل فرما جو تیرے بندے اور تیرے رسول ہیں، اور ان کے پاکیزہ اہل بیت (ع) پر...',
+    audio: 'https://www.duas.org/audio/Sahifa_24.mp3',
+    historicalContext: 'From Sahifa Sajjadiya (The Psalms of Islam). A beautiful prayer teaching us how to treat and pray for our parents.'
   }
 ];
 
@@ -871,7 +989,8 @@ export const SHIA_HADITHS: Hadith[] = [
     translation: 'He who knows himself knows his Lord.',
     source: 'Ghurar al-Hikam',
     author: 'Imam Ali (as)',
-    tags: ['Knowledge', 'Spirituality']
+    tags: ['Knowledge', 'Spirituality'],
+    category: 'Gnosis'
   },
   {
     id: 'h2',
@@ -879,7 +998,8 @@ export const SHIA_HADITHS: Hadith[] = [
     translation: 'I was only sent to perfect noble character.',
     source: 'Bihar al-Anwar',
     author: 'Prophet Muhammad (saws)',
-    tags: ['Ethics', 'Character']
+    tags: ['Ethics', 'Character'],
+    category: 'Ethics'
   },
   {
     id: 'h3',
@@ -887,7 +1007,8 @@ export const SHIA_HADITHS: Hadith[] = [
     translation: 'Knowledge is a great treasure that never perishes.',
     source: 'Nahj al-Balagha',
     author: 'Imam Ali (as)',
-    tags: ['Knowledge', 'Wisdom']
+    tags: ['Knowledge', 'Wisdom'],
+    category: 'Knowledge'
   },
   {
     id: 'h4',
@@ -895,7 +1016,8 @@ export const SHIA_HADITHS: Hadith[] = [
     translation: 'Patience is to faith what the head is to the body.',
     source: 'Al-Kafi',
     author: 'Imam as-Sadiq (as)',
-    tags: ['Patience', 'Faith']
+    tags: ['Patience', 'Faith'],
+    category: 'Faith'
   },
   {
     id: 'h5',
@@ -903,8 +1025,64 @@ export const SHIA_HADITHS: Hadith[] = [
     translation: 'The best worship after knowledge is waiting for the relief (reappearance of Imam Mahdi).',
     source: 'Tuhaf al-Uqul',
     author: 'Imam al-Kadhim (as)',
-    tags: ['Worship', 'Imam Mahdi']
+    tags: ['Worship', 'Imam Mahdi'],
+    category: 'Wait for Relief'
+  },
+  {
+    id: 'h6',
+    arabic: 'كُونُوا دُعَاةً لِلنَّاسِ بِغَيْرِ أَلْسِنَتِكُمْ',
+    translation: 'Invite people [to the Truth] with other than your tongues (i.e., through your actions).',
+    source: 'Al-Kafi',
+    author: 'Imam as-Sadiq (as)',
+    tags: ['Action', 'Dawah'],
+    category: 'Ethics'
+  },
+  {
+    id: 'h7',
+    arabic: 'مَنْ كَانَ لَهُ مَعَ اللَّهِ وَقْتٌ فَلَا يَشْغَلُهُ بِغَيْرِهِ',
+    translation: 'He who has a time with Allah should not occupy it with anything else.',
+    source: 'Jami al-Akhbar',
+    author: 'Imam Ali (as)',
+    tags: ['Prayer', 'Focus'],
+    category: 'Worship'
+  },
+  {
+    id: 'h8',
+    arabic: 'إِنَّ الْحُسَيْنَ مِصْبَاحُ الْهُدَى وَ سَفِينَةُ النَّجَاةِ',
+    translation: 'Indeed, Hussain is the Torch of Guidance and the Ark of Salvation.',
+    source: 'Uyun Akhbar al-Reza',
+    author: 'Prophet Muhammad (saws)',
+    tags: ['Imam Hussain', 'Guidance'],
+    category: 'Ahlulbayt'
+  },
+  {
+    id: 'h9',
+    arabic: 'أَنَا مَدِينَةُ الْعِلْمِ وَعَلِيٌّ بَابُهَا',
+    translation: 'I am the City of Knowledge and Ali is its Gate.',
+    source: 'Mustadrak al-Hakim',
+    author: 'Prophet Muhammad (saws)',
+    tags: ['Imam Ali', 'Knowledge'],
+    category: 'Knowledge'
+  },
+  {
+    id: 'h10',
+    arabic: 'فَاطِمَةُ بَضْعَةٌ مِنِّي فَمَنْ آذَاهَا فَقَدْ آذَانِي',
+    translation: 'Fatima is a part of me; whoever hurts her, hurts me.',
+    source: 'Bihar al-Anwar',
+    author: 'Prophet Muhammad (saws)',
+    tags: ['Lady Fatima', 'Love'],
+    category: 'Ahlulbayt'
   }
+];
+
+export const HADITH_CATEGORIES = [
+  { id: 'All', name: 'All Wisdom', icon: 'fa-mosque' },
+  { id: 'Knowledge', name: 'Knowledge', icon: 'fa-book' },
+  { id: 'Ethics', name: 'Ethics', icon: 'fa-heart' },
+  { id: 'Faith', name: 'Faith', icon: 'fa-shield-halved' },
+  { id: 'Ahlulbayt', name: 'Ahlulbayt', icon: 'fa-hand-praying' },
+  { id: 'Worship', name: 'Worship', icon: 'fa-star-and-crescent' },
+  { id: 'Social', name: 'Social Justice', icon: 'fa-scale-balanced' }
 ];
 export const RAMADAN_DAYS: import('./types').RamadanDay[] = [
   {
